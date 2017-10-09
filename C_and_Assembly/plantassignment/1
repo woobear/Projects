@@ -1,0 +1,82 @@
+//Robert Wooner
+//CS 261j
+#define _GNU_SOURCE
+#include <stdio.h>
+#include <math.h>
+#include <string.h>
+#include <plot.h>
+#include <ctype.h>
+#include <stdlib.h>
+
+
+typedef struct list {
+	char *name;
+	char *color;
+	double size;
+	double mass;
+	double xPosition;
+	double yPostiion;
+	double xVelocity;
+	double yVelocity;
+	struct list *next;
+} List;
+
+List *getVariables() {
+		List *page = (List*)malloc(sizeof(List));
+		page->name = NULL;
+		page->color = NULL;
+		page->size = 0.0;
+		page->mass = 0.0;
+		page->xPosition = 0.0;
+		page->yPostiion = 0.0;
+		page->xVelocity = 0.0;
+		page->yVelocity = 0.0;
+		page->next = NULL;
+		return page;
+	}
+
+
+
+int main( int argc, char *argv[]) {				
+	List *page = NULL;
+	List *frontPage = NULL;
+	List *newPage = NULL;
+	FILE *fd = fopen(argv[1],"r");
+	char str[200] ;
+	if (fd == NULL) {
+		fprintf(stderr, "This file has nothing in it");
+	}else {
+		while (! feof(fd)){
+			if (fgets(str, 201,fd) != NULL){
+				if (str[0] == 35 || isspace(str[0])){
+					continue;
+				}
+				if (page == NULL){
+					char * name = malloc(sizeof(char));
+					char * color = malloc(sizeof(char));
+					page = getVariables();
+					sscanf(str, "%s %s %lf %lf %lf %lf %lf %lf",name,color,&page->size,&page->mass,&page->xPosition,&page->yPostiion,&page->xVelocity,&page->yVelocity);
+					page->name = name;
+					page->color = color;
+					frontPage = page;
+					printf("Name = %s, color = %s, size = %lf, mass = %lf, xposition = %lf, yposition = %lf, xvelocity = %lf, yvelocity = %lf\n",page->name,page->color,page->size,page->mass,page->xPosition,page->yPostiion,page->xVelocity,page->yVelocity);
+				}else {
+					newPage = getVariables();
+					char * name = malloc(sizeof(char));
+					char * color = malloc(sizeof(char));
+					sscanf(str, "%s %s %lf %lf %lf %lf %lf %lf",name,color,&page->size,&page->mass,&page->xPosition,&page->yPostiion,&page->xVelocity,&page->yVelocity);
+					page->name = name;
+					page->color = color;
+					page->next = newPage;
+					page = newPage;
+				}
+			}
+		}
+		page = frontPage;
+		while (page->next != NULL) {
+			printf("Name = %s, color = %s, size = %lf, mass = %lf, xposition = %lf, yposition = %lf, xvelocity = %lf, yvelocity = %lf\n",page->name,page->color,page->size,page->mass,page->xPosition,page->yPostiion,page->xVelocity,page->yVelocity);
+			page = page->next;
+		}
+	}
+return 0;
+}
