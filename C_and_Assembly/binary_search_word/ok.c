@@ -62,7 +62,7 @@ int main(int argc, char* argv[]) {
     if (argc != 2) {
         fprintf(stderr, "Incorrect amount of Arguments");
     }
-    int readFile = open("./encs_share/cs/class/cs360/lib/webster", O_RDONLY);
+    int readFile = open("./webster", O_RDONLY);
     char* word = createWord(argv[1]);
 
     if (search(readFile, word)) {
